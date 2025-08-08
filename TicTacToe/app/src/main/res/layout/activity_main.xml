@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Playbackground"
+    android:background="@color/playBackGround"
     tools:context=".HostJoin">
 
     <TextView
@@ -25,32 +25,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="16dp">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/PlayButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Play"
+            android:text="@string/join"
             android:textColor="@color/black"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_editor_absoluteY="455dp" />
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <Button
             android:id="@+id/Host"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Host"
+            android:text="@string/host"
             android:textColor="@color/black"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:layout_editor_absoluteY="380dp" />
+ />
 
     </LinearLayout>
 
