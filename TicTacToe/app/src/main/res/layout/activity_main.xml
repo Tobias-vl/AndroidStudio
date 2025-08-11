@@ -8,6 +8,11 @@
     android:background="@color/playBackGround"
     tools:context=".HostJoin">
 
+    <FrameLayout
+        android:id="@+id/frag_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/MainMenu"
         android:layout_width="wrap_content"
