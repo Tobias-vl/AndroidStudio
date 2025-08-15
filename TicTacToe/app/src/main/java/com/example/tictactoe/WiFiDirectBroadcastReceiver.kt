@@ -61,11 +61,11 @@ public class WiFiDirectBroadcastReceiver(
             }
 
             WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
-                (activity.supportFragmentManager.findFragmentById(R.id.frag_list) as DeviceListFragment)
+                (activity.supportFragmentManager.findFragmentById(R.id.frag_list) as PeerListAdapter)
                     .apply {
                         val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
                         device?.let {
-                            (activity?.supportFragmentManager?.findFragmentById(R.id.frag_list) as? DeviceListFragment)
+                            (activity?.supportFragmentManager?.findFragmentById(R.id.frag_list) as? PeerListAdapter)
                                 ?.updateThisDevice(it)
                         }
                     }

@@ -1,34 +1,55 @@
 package com.example.tictactoe
 
 import android.net.wifi.p2p.WifiP2pDevice
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
+class PeerListAdapter(
+    private var peers: List<WifiP2pDevice>,
+    private val onClick: (WifiP2pDevice) -> Unit
+) : RecyclerView.Adapter<PeerListAdapter.PeerViewHolder>() {
 
-class DeviceListFragment : Fragment() {
-
-    private val devices = mutableListOf<WifiP2pDevice>()
-
-    // Inflate the fragment layout
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_device_list, container, false)
+    inner class PeerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val deviceName: TextView = itemView.findViewById(R.id.deviceName)
+        val deviceStatus: TextView = itemView.findViewById(R.id.deviceStatus)
     }
 
-    // Call this to update the device list UI
-    fun updateDeviceList(newDevices: Collection<WifiP2pDevice>) {
-        devices.clear()
-        devices.addAll(newDevices)
-        // TODO: Update UI to show devices (e.g., notify RecyclerView adapter)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeerViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.fragment_device_list, parent, false)
+        return PeerViewHolder(view)
     }
 
-    // Update info about this device
-    fun updateThisDevice(device: WifiP2pDevice) {
-        // TODO: Update UI elements showing your own device info
+    override fun onBindViewHolder(holder: PeerViewHolder, position: Int) {
+        val device = peers[position]
+        holder.deviceName.text = device.deviceName
+        holder.deviceStatus.text = getDeviceStatus(device.status)
+
+        holder.itemView.setOnClickListener { onClick(device) }
     }
+
+    override fun getItemCount() = peers.size
+
+    fun updateData(newPeers: List<WifiP2pDevice>) {
+        peers = newPeers
+        notifyDataSetChanged()
+    }
+
+    private fun getDeviceStatus(status: Int): String {
+        return when (status) {
+            WifiP2pDevice.AVAILABLE -> "Available"
+            WifiP2pDevice.INVITED -> "Invited"
+            WifiP2pDevice.CONNECTED -> "Connected"
+            WifiP2pDevice.FAILED -> "Failed"
+            WifiP2pDevice.UNAVAILABLE -> "Unavailable"
+            else -> "Unknown"
+        }
+    }
+}
+
+ fun PeerListAdapter?.updateThisDevice(it: WifiP2pDevice) {
+            TODO("Not yet implemented")
 }

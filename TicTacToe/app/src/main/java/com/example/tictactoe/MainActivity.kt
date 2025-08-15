@@ -13,8 +13,16 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.tictactoe.databinding.ActivityMainBinding
+import com.example.tictactoe.databinding.GameScreenBinding
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.ServerSocket
+import java.net.Socket
+import kotlin.concurrent.thread
 
 public final class MainActivity : AppCompatActivity() {
     var isWifiP2pEnabled: Boolean = false
@@ -29,10 +37,13 @@ public final class MainActivity : AppCompatActivity() {
 
     private val peers = mutableListOf<WifiP2pDevice>()
 
+    private lateinit var binding : ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Indicates a change in the Wi-Fi Direct status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -62,7 +73,16 @@ public final class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun connectToFirstPeer() {
+    fun clickedButton(view : View) {
+            if(view.id == R.id.Join) {
+                requestPeers()
+                discoverPeers()
+            } else if(view.id == R.id.Host) {
+
+            }
+    }
+
+    fun connectToFirstPeer(device : WifiP2pDevice) {
         if (peers.isEmpty()) {
             Toast.makeText(this, "No peers available", Toast.LENGTH_SHORT).show()
             return
@@ -91,15 +111,11 @@ public final class MainActivity : AppCompatActivity() {
         manager.connect(channel, config, object : WifiP2pManager.ActionListener {
 
             override fun onSuccess() {
-                Log.d(TAG, "Connecting to ${device.deviceName}")
+                Toast.makeText(this@MainActivity, "Connecting to ${device.deviceName}", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(reason: Int) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Connect failed. Retry.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "Connect failed. Retry.", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -173,24 +189,6 @@ public final class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun requestGroupInfo() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                102
-            )
-            return
-        }
-        manager.requestGroupInfo(channel) { group ->
-            val groupPassword = group.passphrase
-        }
-    }
-
     fun createPeersList(): WifiP2pManager.PeerListListener {
 
         val peerListListener = WifiP2pManager.PeerListListener { peerList ->
@@ -213,7 +211,17 @@ public final class MainActivity : AppCompatActivity() {
             val groupOwnerAddress: String = info.groupOwnerAddress.hostAddress
             if (info.groupFormed && info.isGroupOwner) {
                 Log.d(TAG, "This device is the group owner")
-                // Start server tasks here
+                thread {
+                    try {
+                        val serverSocket = ServerSocket(8080)
+                        val client = serverSocket.accept()
+                        val input = client.getInputStream()
+                        val output = client.getOutputStream()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+
             } else if (info.groupFormed) {
                 Log.d(TAG, "This device is the client, group owner: $groupOwnerAddress")
                 if (ActivityCompat.checkSelfPermission(
@@ -223,6 +231,16 @@ public final class MainActivity : AppCompatActivity() {
                 ) {
                     manager.requestGroupInfo(channel) { group ->
                         val groupPassword = group.passphrase
+                    }
+                }
+                thread {
+                    try {
+                        val socket = Socket()
+                        socket.connect(InetSocketAddress(groupOwnerAddress, 8080))
+                        val input = socket.getInputStream()
+                        val output = socket.getOutputStream()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
                     }
                 }
                 // Connect to the group owner here

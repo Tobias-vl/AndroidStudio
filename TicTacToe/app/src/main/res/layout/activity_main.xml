@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/playBackGround"
-    tools:context=".HostJoin">
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/frag_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/MainMenu"
@@ -33,11 +34,12 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/PlayButton"
+            android:id="@+id/Join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/join"
             android:textColor="@color/black"
+            android:onClick="clickedButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -47,6 +49,7 @@
             android:layout_height="wrap_content"
             android:text="@string/host"
             android:textColor="@color/black"
+            android:onClick="clickedButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
  />
