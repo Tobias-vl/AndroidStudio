@@ -8,6 +8,8 @@
     android:background="@color/playBackGround"
     tools:context=".MainActivity">
 
+
+
     <FrameLayout
         android:id="@+id/frag_list"
         android:layout_width="match_parent"
@@ -34,27 +36,35 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/Join"
+            android:id="@+id/hostButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/join"
+            android:text="Host"
             android:textColor="@color/black"
-            android:onClick="clickedButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <Button
-            android:id="@+id/Host"
+            android:id="@+id/joinButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/host"
+            android:text="Join"
             android:textColor="@color/black"
-            android:onClick="clickedButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
  />
 
     </LinearLayout>
+
+    <!-- Container for the peers-list fragment -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity=""
+        android:layout_weight="1"
+        android:visibility="visible"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

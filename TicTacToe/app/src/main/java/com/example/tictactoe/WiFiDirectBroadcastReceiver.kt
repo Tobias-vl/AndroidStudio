@@ -48,7 +48,7 @@ public class WiFiDirectBroadcastReceiver(
 
                 manager.let { manager ->
 
-                    val networkInfo = intent?.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)
+                    val networkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)
 
                     if (networkInfo?.isConnected == true) {
 
@@ -65,8 +65,8 @@ public class WiFiDirectBroadcastReceiver(
                     .apply {
                         val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
                         device?.let {
-                            (activity?.supportFragmentManager?.findFragmentById(R.id.frag_list) as? PeerListAdapter)
-                                ?.updateThisDevice(it)
+                            (activity.supportFragmentManager.findFragmentById(R.id.frag_list) as PeerListAdapter)
+                                .updateThisDevice(it)
                         }
                     }
             }
